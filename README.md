@@ -1,4 +1,4 @@
-# k_Connected_Forest_Star_Problem
+# $\kappa$ connected Forest Star_Problem
 
 This project implements a system that integrates data management, modeling, and visualization for solving optimization problems using the CPLEX environment. Below is an overview of the project's structure and functionality.
 
