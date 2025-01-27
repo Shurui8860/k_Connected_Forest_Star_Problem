@@ -13,8 +13,6 @@ This project implements a system that integrates data management, optimization m
   - [main.py](#mainpy)
   - [data\_class.py](#data_classpy)
   - [model\_class.py](#model_classpy)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Project Structure
 
@@ -98,10 +96,3 @@ Defines and solves the optimization model using the `docplex` library.
 - **Methods**:
   - `__init__`: Initializes the model with the data and connectedness constraints.
   - `solve(log)`: Solves the optimization problem and retrieves the solution.
-
-
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
-
