@@ -1,4 +1,4 @@
-# $\kappa$ connected Forest Star Problem
+# $\kappa$-connected Arborescence Star Problem
 
 This project implements a system that integrates data management, optimization modeling, and visualization for solving complex optimization problems using the CPLEX environment. It utilizes Python and the `docplex` library to build and solve optimization models, along with custom visualization tools to interpret results.
 
