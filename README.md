@@ -150,9 +150,9 @@ $$
 > Remarks. (C2)–(C5) together with the connectivity cuts below rule out all directed cycles not containing a root. If a cycle appears, it would create a subset (S) with no entering arc from outside, violating the cut in (K-Cuts).
 
 
-## Assignment constraints
+### Assignment constraints
 
-**(A1) Each customer is either on the backbone or assigned exactly once:** A customer is served either by being a backbone vertex itself or by being attached to exactly one backbone vertex.
+** Each customer is either on the backbone or assigned exactly once:** A customer is served either by being a backbone vertex itself or by being attached to exactly one backbone vertex.
 
 $$
 w_j = y_{jj} \qquad \forall j\in C.
@@ -161,15 +161,6 @@ $$
 $$
 \sum_{i\in V} y_{ij} = 1 \qquad \forall j\in C.
 $$
-
-**(A2) Assignment only to backbone vertices:** You can only assign a customer to a vertex that actually exists on the backbone.
-
-$$
-y_{ij} \le w_i \qquad \forall i\in V,\ \forall j\in C.
-$$
-
-**(A3) Forbid self-assignment unless on backbone** 
-This is already enforced by (A1)–(A2): if $y_{jj}=1$ then $w_j=1$. If you prefer to rule out $y_{jj}$ explicitly, add $y_{jj} \le w_j$ (redundant) or fix $y_{jj}=0$ for modeling taste.
 
 ---
 
