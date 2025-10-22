@@ -109,9 +109,9 @@ pip install numpy networkx matplotlib docplex
 
 ### Objective
 
-  $$
-  \min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
-  $$
+$$
+\min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
+$$
 
 
 ### Structural constraints
@@ -122,29 +122,30 @@ $$
 w_r = 1 \qquad \forall r\in R.
 $$
 
-**(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ((w_v=0), then it has no entering backbone arc) or *in* the backbone ((w_v=1)), in which case it must have **exactly one** entering arc—this is the arborescence rule that avoids branching into a node.
+**(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ($w_v=0$, then it has no entering backbone arc) or *in* the backbone ($w_v=1$), in which case it must have **exactly one** entering arc—this is the arborescence rule that avoids branching into a node.
 
 $$
-\sum_{i\in V:\ (i,v)\in A} x_{iv} = w_v \qquad \forall v\in V\setminus R.
+\sum_{i \in V:\ (i,v)\in A} x_{iv} = w_v \qquad \forall v \in V \setminus R.
 $$
 
-**(C3) In–degree of roots**
-[
+**(C3) In–degree of roots**: Roots have no predecessors in an arborescence.
+
+$$
 \sum_{i\in V:\ (i,r)\in A} x_{ir} = 0 \qquad \forall r\in R.
-]
-**Why:** Roots have no predecessors in an arborescence.
+$$
 
-**(C4) Outgoing arcs only from backbone vertices**
-[
+**(C4) Outgoing arcs only from backbone vertices:** If a vertex is not on the backbone $w_v=0$, it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable; this one uses $\deg^{+}(v))$ as a tight (M).)
+
+$$
 \sum_{j\in V:\ (v,j)\in A} x_{vj} ;\le; \deg^{+}(v), w_v \qquad \forall v\in V.
-]
-**Why:** If a vertex is not on the backbone ((w_v=0)), it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable; this one uses (\deg^{+}(v)) as a tight (M).)
+$$
 
-**(C5) No 2-cycles**
-[
+**(C5) No 2-cycles:** Two opposite arcs between a pair would form a directed 2-cycle and violate the tree-like structure.
+
+$$
 x_{ij}+x_{ji}\le 1 \qquad \forall {i,j}\subseteq V,\ (i,j)\in A,\ (j,i)\in A.
-]
-**Why:** Two opposite arcs between a pair would form a directed 2-cycle and violate the tree-like structure.
+$$
+
 
 > Remarks. (C2)–(C5) together with the connectivity cuts below rule out all directed cycles not containing a root. If a cycle appears, it would create a subset (S) with no entering arc from outside, violating the cut in (K-Cuts).
 * **Structural constraints** (implemented in `model.py`):
