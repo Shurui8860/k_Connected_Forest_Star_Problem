@@ -99,9 +99,9 @@ pip install numpy networkx matplotlib docplex
 
 ### Decision variables
 
-* $x_{ij}\in{0,1}$ for $(i,j)\in A$: arc $(i,j)$ is selected in the backbone.
-* $y_{ij}\in{0,1}$ for $i\in V,\ j\in C$: customer $j$ is assigned to (served by) backbone vertex (i).
-* $w_i\in{0,1}$ for $i\in V$: vertex $i$ lies on the backbone (is “opened/kept” in the arborescence union).
+* $x_{ij}\in \{0, 1\}$ for $(i,j) \in A$: arc $(i,j)$ is selected in the backbone.
+* $y_{ij}\in \{0, 1\}$ for $i \in V,\ j\in C$: customer $j$ is assigned to (served by) backbone vertex (i).
+* $w_i \in \{0, 1\}$ for $i \in V$: vertex $i$ lies on the backbone (is “opened/kept” in the arborescence union).
 
 > Intuition: $x$ builds the directed forest, $w$ indicates which vertices actually belong to that forest, and $y$ lets customers that are not on the forest be attached to some backbone vertex.
 
