@@ -164,63 +164,29 @@ $$
 
 ---
 
-* **Structural constraints** (implemented in `model.py`):
+### $\kappa$-connectivity constraints 
 
-  * Root designation and arborescence-style in-degree controls for non-roots.
-  * Compatibility: assignments allowed only to backbone vertices.
-  * Prohibitions on trivial symmetric 2-cycles, and additional linking logic between (x), (y), (w).
+Let (\kappa\in\mathbb{Z}_{\ge 1}) be the required **edge-disjoint** connectivity from **distinct roots** to every backbone vertex. Using max-flow/min-cut arguments, for each *terminal* vertex $v \in V \setminus R$ and each subset $S\subseteq V$ with $v\in S$, we must have enough backbone arcs entering $S$ from outside to support $\kappa$ disjoint root-to-$v$ paths, after accounting for the number of roots already inside $S$.
 
-* **κ-connectivity constraints** (separated as lazy cuts in `callback.py`):
-  For any subset (S\subseteq V) and for each demand configuration, enforce that the number of arcs leaving (S) is sufficiently large to guarantee κ edge-disjoint root-to-(S) connectivity from distinct roots. In practice, violated cuts are identified via min-cut routines on appropriately constructed auxiliary networks and added on the fly as **lazy constraints** (and, when helpful, as **user cuts**).
+Define 
 
-This separation scheme follows the standard branch-and-cut paradigm: solve relaxations, detect violations, add cuts, and continue until convergence.
+$$
+\delta^{-}(S):={(i,j)\in A:\ i\notin S,\ j\in S}.
+$$
 
-Great—here is a precise list of the **decision variables, objective, and explicit constraints**, each followed by an **intuitive explanation**. The notation matches a directed graph (G=(V,A)) with roots (R\subseteq V) and customers (C:=V\setminus R). Costs (c_{ij}\ge 0) (building a backbone arc) and (a_{ij}\ge 0) (assigning customer (j) to backbone vertex (i)) are given.
+Then:
 
----
-
-## κ-connectivity cuts (branch-and-cut)
-
-Let (\kappa\in\mathbb{Z}_{\ge 1}) be the required **edge-disjoint** connectivity from **distinct roots** to every backbone vertex. Using max-flow/min-cut arguments, for each *terminal* vertex (v\in V\setminus R) and each subset (S\subseteq V) with (v\in S), we must have enough backbone arcs entering (S) from outside to support (\kappa) disjoint root-to-(v) paths, after accounting for the number of roots already inside (S).
-
-Define (\delta^{-}(S):={(i,j)\in A:\ i\notin S,\ j\in S}). Then:
-
-**(K-Cuts) Node-based κ-root connectivity**
-[
-\sum_{(i,j)\in \delta^{-}(S)} x_{ij} ;;\ge;; \max{0,\ \kappa - |S\cap R|},, w_v
+$$
+\sum_{(i,j)\in \delta^{-}(S)} x_{ij} ;;\ge;; \max{0,\ \kappa - |S\cap R|} \cdot  w_v
 \qquad \forall v\in V\setminus R,\ \forall S\subseteq V \text{ with } v\in S.
-]
+$$
 
-**Why (intuition):**
+**Intuition:**
 
-* If **no root** lies in (S) ((|S\cap R|=0)), then at least (\kappa) backbone arcs must cross **into** (S). Otherwise, you cannot route (\kappa) edge-disjoint paths from distinct roots outside (S) to reach (v\in S).
-* If (t:=|S\cap R|>0), then at most (t) of the required (\kappa) paths can start **inside** (S). The remainder (\kappa-t) must enter from outside; thus the right-hand side becomes (\kappa-t).
-* The factor (w_v) deactivates the constraint when (v) is not on the backbone ((w_v=0)): non-backbone customers do not need κ-connectivity because they are served via assignment.
-* Enforcing (K-Cuts) for **all** (S) is exponential; therefore, they are separated on-the-fly using min-cut routines in a **lazy-constraint** (and optionally **user-cut**) callback.
-
-> Practical separation: For each candidate backbone vertex (v) with (w_v>0) in the current relaxation/solution, build an auxiliary network with unit capacities on selected backbone arcs, add root super-sources with capacities reflecting “distinct roots,” and compute a min-cut that either certifies feasibility (value (\ge \kappa)) or yields a violated set (S) to cut.
-
----
-
-## Optional strengthening (if present in your codebase)
-
-* **Root–outflow lower bounds.** One may enforce that each root has at least one outgoing backbone arc when a demand requires it (this is usually implied by (K-Cuts), but explicit lower bounds can tighten the root node relaxations).
-* **Assignment-aware cuts.** If your variant requires that assigned customers inherit κ-robust reachability to their *host* (i), you can enforce (K-Cuts) only for vertices with positive inbound assignment or add:
-  [
-  \sum_{(p,q)\in \delta^{-}(S)} x_{pq} ;\ge; \max{0,\ \kappa - |S\cap R|}, \sum_{i\in S} y_{i j}
-  \quad \forall j\in C,\ \forall S\subseteq V,
-  ]
-  which demands κ-robust access into any subset (S) that contains the hosting vertex of customer (j). (Use with care; it is stronger and costlier to separate.)
-
----
-
-## What these constraints collectively guarantee
-
-* **Tree-like backbone:** (C2)–(C5) enforce a union of rooted arborescences without directed cycles and with exactly one entering arc per non-root backbone node.
-* **Service completeness:** (A1)–(A2) ensure every customer is served exactly once—either on the backbone or by attachment to a backbone vertex.
-* **Robust reachability:** (K-Cuts) guarantee, for each backbone vertex, the existence of (\kappa) edge-disjoint directed paths from **distinct roots**, thus providing survivability to up to (\kappa-1) arc failures (under standard edge-disjoint path interpretations).
-
-If you’d like, I can also provide the exact separation pseudocode for (K-Cuts) (single-commodity min-cut per terminal (v)) and a compact **LP relaxation** annotated with which constraints are added as lazy cuts versus static rows.
+* If **no root** lies in $S$ ($|S \cap R| = 0$), then at least $\kappa$ backbone arcs must cross **into** $S$. Otherwise, you cannot route $\kappa$ edge-disjoint paths from distinct roots outside $S$ to reach $v \in S$.
+* If $t := | S \cap R| > 0$, then at most $t$ of the required $\kappa$ paths can start **inside** $S$. The remainder $\kappa-t$ must enter from outside; thus the right-hand side becomes $\kappa-t$.
+* The factor $w_v$ deactivates the constraint when $v$ is not on the backbone ($w_v=0$: non-backbone customers do not need $κ$-connectivity because they are served via assignment.
+* Enforcing (K-Cuts) for **all** $S$ is exponential; therefore, they are separated on-the-fly using min-cut routines in a **lazy-constraint** (and optionally **user-cut**) callback.
 
 ---
 
