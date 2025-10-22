@@ -125,7 +125,7 @@ $$
 **(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ($w_v=0$, then it has no entering backbone arc) or *in* the backbone ($w_v=1$), in which case it must have **exactly $\kappa$** entering arc—this is the arborescence rule that avoids branching into a node.
 
 $$
-\sum_{i \in V:\ (i,v)\in A} x_{iv} = \kappa w_v \qquad \forall v \in V \setminus R.
+\sum_{i \in V:\ (i,v)\in A} x_{iv} = \kappa \cdot w_v \qquad \forall v \in V \setminus R.
 $$
 
 **(C3) In–degree of roots**: Roots have no predecessors in an arborescence.
@@ -137,7 +137,7 @@ $$
 **(C4) Outgoing arcs only from backbone vertices:** If a vertex is not on the backbone $w_v=0$, it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable; this one uses $\deg^{+}(v))$ as a tight (M).)
 
 $$
-\sum_{j\in V:\ (v,j)\in A} x_{vj} = \kappa w_r \qquad \forall v\in V.
+\sum_{j\in V:\ (v,j)\in A} x_{vj} = M \cdot w_r \qquad \forall v\in V.
 $$
 
 **(C5) No 2-cycles:** Two opposite arcs between a pair would form a directed 2-cycle and violate the tree-like structure.
