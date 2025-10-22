@@ -1,98 +1,147 @@
-# $\kappa$-connected Arborescence Star Problem
+# The $\kappa$-Connected Arborescence–Star Problem
 
-This project implements a system that integrates data management, optimization modeling, and visualization for solving complex optimization problems using the CPLEX environment. It utilizes Python and the `docplex` library to build and solve optimization models, along with custom visualization tools to interpret results.
+**Formulation and Branch-and-Cut Implementation**
 
-## Table of Contents
+This repository provides a reference implementation for the **$\kappa$-connected Arborescence–Star Problem** on directed graphs. It includes: 
+(i) data generation utilities, 
+(ii) a mixed-integer programming (MIP) model constructed in **DOCplex**, 
+(iii) **CPLEX** callback routines for branch-and-cut (lazy and user cuts), and 
+(iv) a **NetworkX/Matplotlib** visualizer for solutions.
 
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Modules Overview](#modules-overview)
-  - [plot\_class.py](#plot_classpy)
-  - [callback.py](#callbackpy)
-  - [main.py](#mainpy)
-  - [data\_class.py](#data_classpy)
-  - [model\_class.py](#model_classpy)
+Intuitively, given a directed graph with a designated set of roots (R) and customer vertices (V), the goal is to select an arborescence-like backbone (a union of rooted directed trees) and to either place customers on the backbone or assign them to backbone vertices, while enforcing **κ-connectivity**: each backbone vertex must admit at least (κ) pairwise edge-disjoint directed paths from **distinct** roots. The model internalizes a cost trade-off between building backbone arcs and assigning customers.
 
-## Project Structure
+![](example.png)
+
+---
+
+## Repository Layout
 
 ```
 .
-├── plot_class.py     # Functions for plotting solutions and graphs
-├── callback.py       # Callback classes for CPLEX optimization
-├── main.py           # Entry point of the program
-├── data_class.py     # Data management and creation
-├── model_class.py    # Optimization model and solving logic
+├─ main.py          # Entry point: data generation → model build → callbacks → solve → plot
+├─ data.py          # Data utilities: random coordinates, arc sets, cost matrices
+├─ model.py         # MIP model (DOCplex): variables, objective, constraints
+├─ callback.py      # CPLEX callbacks: lazy cuts, user cuts, incumbent logging
+├─ plot.py          # Visualization (NetworkX + Matplotlib)
+├─ example.png      # Sample output figure
+├─ The_kappa_connected_Arborescence_Star_Problem__Formulation_and_Branch_and_Cut_Algorithm.pdf
+└─ README.md
 ```
 
-## Installation
+---
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd <project-directory>
-   ```
-3. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Requirements and Installation
 
-## Usage
+### Prerequisites
 
-Run the main script to execute the program:
+* **Python** ≥ 3.8
+* **IBM ILOG CPLEX Optimization Studio** (with a valid license)
+* Python packages: `cplex` (the solver’s Python API), `docplex`, `numpy`, `networkx`, `matplotlib`
+
+> **Note.** `docplex` is only the modeling layer. A local CPLEX installation is required to run the MIP with callbacks.
+
+### Suggested Conda Environment
 
 ```bash
-python main.py
+conda create -n kfsp python=3.10 -y
+conda activate kfsp
+pip install numpy networkx matplotlib docplex
+# Install the CPLEX Python API from your local CPLEX distribution:
+#   <CPLEX_INSTALL_DIR>/python/3.x/<platform>/
+# then:
+# pip install cplex-*.whl
 ```
 
-## Modules Overview
+---
 
-### `plot_class.py`
+## Quick Start
 
-This module provides utility functions to visualize optimization results. It helps in interpreting the data and solution through graphs and plots.
+1. **Configure instance parameters** (optional)
+   Open `main.py` and adjust the default parameters, for example:
 
-- **Functions**:
-  - `plot_solution(data, model)`: Plots the solution of the optimization problem, including routes and assignments.
-  - `create_network(data, model)`: Generates a network graph representing the relationships between nodes and edges.
-  - `plot_graph(data, model)`: Visualizes the graph with nodes, edges, and their attributes.
+   ```python
+   num_of_roots, num_of_customers = 3, 24
+   k, const, seed = 3, 2, 0        # κ (connectivity), assignment-cost factor, RNG seed
+   p.create_data(const=const, seed=seed, width=100)
+   ```
 
-### `callback.py`
+   * `const=None` makes assignment costs proportional to arc costs (e.g., (a = k\cdot c));
+     otherwise (a = \texttt{const}\cdot c).
 
-Implements callback classes to enhance the optimization process by adding custom constraints and heuristics during the solving phase.
+2. **Solve and visualize**
 
-- **Classes**:
-  - `Callback_lazy`: Handles lazy constraint generation to ensure solutions meet specified conditions.
-  - `Callback_user`: Applies user-defined constraints dynamically during the solving process.
-  - `HeuristicsCallback`: Incorporates heuristic methods to improve solution quality and reduce solving time.
+   ```bash
+   python main.py
+   ```
 
-### `main.py`
+   The script prints solver progress and objective values, then renders a solution plot.
 
-The entry point of the program, orchestrating data generation, model setup, and solution visualization.
+---
 
-- **Key Workflow**:
-  1. Creates data using the `Data` class.
-  2. Initializes the `KfspModel` optimization model.
-  3. Registers callbacks (`Callback_lazy`, `Callback_user`).
-  4. Solves the model and visualizes the results using `plot_graph`.
+## Input Model and Parameters
 
-### `data_class.py`
+* **Graph construction.** `data.py` samples vertex coordinates and builds a directed graph (complete or sparsified, depending on the routine), together with:
 
-Handles data creation and preprocessing for the optimization model.
+  * arc cost matrix (c_{ij}) (backbone construction cost),
+  * assignment cost matrix (a_{ij}) (assigning customer (j) to backbone vertex (i)).
 
-- **Class**:
-  - `Data(n, m)`: Manages the set of roots and customers, their locations, and edge attributes.
-- **Methods**:
-  - `create_data(width, const, seed)`: Generates random locations for roots and customers, calculates distance matrices, and defines edges.
+* **Key parameters.**
 
-### `model_class.py`
+  * `num_of_roots = |R|` — number of root (supply) vertices.
+  * `num_of_customers = |V|` — number of customer vertices.
+  * `k` — κ-connectivity requirement (edge-disjoint root-to-vertex paths from **distinct** roots).
+  * `const` — assignment-to-arc cost scaling (see above).
+  * `seed`, `width` — randomness and geometric scaling for instance generation.
 
-Defines and solves the optimization model using the `docplex` library.
+---
 
-- **Class**:
-  - `KfspModel(name, data, k)`: Represents the optimization problem with decision variables, constraints, and the objective function.
-- **Methods**:
-  - `__init__`: Initializes the model with the data and connectedness constraints.
-  - `solve(log)`: Solves the optimization problem and retrieves the solution.
+## Optimization Model (High-Level)
+
+Let (x_{ij}\in{0,1}) indicate whether arc ((i,j)) is in the backbone,
+(y_{ij}\in{0,1}) whether customer (j) is assigned to backbone vertex (i), and
+(w_i\in{0,1}) whether vertex (i) lies on the backbone.
+
+* **Objective.**
+  [
+  \min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
+  ]
+
+* **Structural constraints** (implemented in `model.py`):
+
+  * Root designation and arborescence-style in-degree controls for non-roots.
+  * Compatibility: assignments allowed only to backbone vertices.
+  * Prohibitions on trivial symmetric 2-cycles, and additional linking logic between (x), (y), (w).
+
+* **κ-connectivity constraints** (separated as lazy cuts in `callback.py`):
+  For any subset (S\subseteq V) and for each demand configuration, enforce that the number of arcs leaving (S) is sufficiently large to guarantee κ edge-disjoint root-to-(S) connectivity from distinct roots. In practice, violated cuts are identified via min-cut routines on appropriately constructed auxiliary networks and added on the fly as **lazy constraints** (and, when helpful, as **user cuts**).
+
+This separation scheme follows the standard branch-and-cut paradigm: solve relaxations, detect violations, add cuts, and continue until convergence.
+
+---
+
+## Visualization
+
+`plot.py` renders the optimized backbone and assignments:
+
+* **Roots** are displayed in red.
+* **Backbone vertices** and **assigned customers** are distinguished by color/shape.
+* **Black arcs** show selected backbone/assignment arcs, following the optimized (x) and (y).
+
+You may also call the routine directly from Python:
+
+```python
+from plot import plot_graph
+plot_graph(data_obj, model_obj)
+```
+
+---
+
+## Reproducibility and Scaling Tips
+
+* Fix `seed` to reproduce a specific instance.
+* Increase `const` to bias the solution toward assignments (smaller backbone).
+* Reduce `num_of_customers` or `k` for faster runs; κ-connectivity substantially tightens the problem.
+* Solver performance is sensitive to the sparsity of the candidate arc set; consider pruning long arcs when experimenting with larger instances.
+
+---
+
