@@ -97,7 +97,7 @@ pip install numpy networkx matplotlib docplex
 
 ## Optimization Model 
 
-## Decision variables
+### Decision variables
 
 * $x_{ij}\in{0,1}$ for $(i,j)\in A$: arc $(i,j)$ is selected in the backbone.
 * $y_{ij}\in{0,1}$ for $i\in V,\ j\in C$: customer $j$ is assigned to (served by) backbone vertex (i).
@@ -107,49 +107,25 @@ pip install numpy networkx matplotlib docplex
 
 
 
-* **Objective.**
+### Objective
+
   $$
   \min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
   $$
 
-* **Structural constraints** (implemented in `model.py`):
 
-  * Root designation and arborescence-style in-degree controls for non-roots.
-  * Compatibility: assignments allowed only to backbone vertices.
-  * Prohibitions on trivial symmetric 2-cycles, and additional linking logic between (x), (y), (w).
+### Structural constraints
 
-* **κ-connectivity constraints** (separated as lazy cuts in `callback.py`):
-  For any subset (S\subseteq V) and for each demand configuration, enforce that the number of arcs leaving (S) is sufficiently large to guarantee κ edge-disjoint root-to-(S) connectivity from distinct roots. In practice, violated cuts are identified via min-cut routines on appropriately constructed auxiliary networks and added on the fly as **lazy constraints** (and, when helpful, as **user cuts**).
-
-This separation scheme follows the standard branch-and-cut paradigm: solve relaxations, detect violations, add cuts, and continue until convergence.
-
-Great—here is a precise list of the **decision variables, objective, and explicit constraints**, each followed by an **intuitive explanation**. The notation matches a directed graph (G=(V,A)) with roots (R\subseteq V) and customers (C:=V\setminus R). Costs (c_{ij}\ge 0) (building a backbone arc) and (a_{ij}\ge 0) (assigning customer (j) to backbone vertex (i)) are given.
-
-
-
-## Objective
-
+**(C1) Root activation:** All roots must belong to the backbone; they are the supply/entry points for connectivity.
 $$
-\min\ \sum_{(i,j)\in A} c_{ij}x_{ij};+;\sum_{i\in V}\sum_{j\in C} a_{ij}y_{ij}.
-$$
-
-**Why:** We trade off construction cost of the backbone and assignment cost. Cheaper assignments push demand off the backbone; expensive assignments incentivize placing more customers on the backbone.
-
----
-
-## Structural constraints
-
-**(C1) Root activation**
-[
 w_r = 1 \qquad \forall r\in R.
-]
-**Why:** All roots must belong to the backbone; they are the supply/entry points for connectivity.
+$$
 
-**(C2) In–degree of non-roots**
-[
+**(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ((w_v=0), then it has no entering backbone arc) or *in* the backbone ((w_v=1)), in which case it must have **exactly one** entering arc—this is the arborescence rule that avoids branching into a node.
+
+$$
 \sum_{i\in V:\ (i,v)\in A} x_{iv} = w_v \qquad \forall v\in V\setminus R.
-]
-**Why:** A non-root vertex is either *outside* the backbone ((w_v=0), then it has no entering backbone arc) or *in* the backbone ((w_v=1)), in which case it must have **exactly one** entering arc—this is the arborescence rule that avoids branching into a node.
+$$
 
 **(C3) In–degree of roots**
 [
@@ -170,6 +146,23 @@ x_{ij}+x_{ji}\le 1 \qquad \forall {i,j}\subseteq V,\ (i,j)\in A,\ (j,i)\in A.
 **Why:** Two opposite arcs between a pair would form a directed 2-cycle and violate the tree-like structure.
 
 > Remarks. (C2)–(C5) together with the connectivity cuts below rule out all directed cycles not containing a root. If a cycle appears, it would create a subset (S) with no entering arc from outside, violating the cut in (K-Cuts).
+* **Structural constraints** (implemented in `model.py`):
+
+  * Root designation and arborescence-style in-degree controls for non-roots.
+  * Compatibility: assignments allowed only to backbone vertices.
+  * Prohibitions on trivial symmetric 2-cycles, and additional linking logic between (x), (y), (w).
+
+* **κ-connectivity constraints** (separated as lazy cuts in `callback.py`):
+  For any subset (S\subseteq V) and for each demand configuration, enforce that the number of arcs leaving (S) is sufficiently large to guarantee κ edge-disjoint root-to-(S) connectivity from distinct roots. In practice, violated cuts are identified via min-cut routines on appropriately constructed auxiliary networks and added on the fly as **lazy constraints** (and, when helpful, as **user cuts**).
+
+This separation scheme follows the standard branch-and-cut paradigm: solve relaxations, detect violations, add cuts, and continue until convergence.
+
+Great—here is a precise list of the **decision variables, objective, and explicit constraints**, each followed by an **intuitive explanation**. The notation matches a directed graph (G=(V,A)) with roots (R\subseteq V) and customers (C:=V\setminus R). Costs (c_{ij}\ge 0) (building a backbone arc) and (a_{ij}\ge 0) (assigning customer (j) to backbone vertex (i)) are given.
+
+
+
+
+
 
 ---
 
