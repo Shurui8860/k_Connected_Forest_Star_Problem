@@ -134,7 +134,7 @@ $$
 \sum_{i\in V:\ (i,r)\in A} x_{ir} = 0 \qquad \forall r\in R.
 $$
 
-**(C4) Outgoing arcs only from backbone vertices:** If a vertex is not on the backbone $w_v=0$, it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable; this one uses $\deg^{+}(v))$ as a tight (M).)
+**(C4) Outgoing arcs only from backbone vertices:** If a vertex is not on the backbone $w_v=0$, it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable.)
 
 $$
 \sum_{j\in V:\ (v,j)\in A} x_{vj} = M \cdot w_r \qquad \forall v\in V.
