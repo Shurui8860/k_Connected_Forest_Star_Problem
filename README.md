@@ -171,13 +171,13 @@ Let (\kappa\in\mathbb{Z}_{\ge 1}) be the required **edge-disjoint** connectivity
 Define 
 
 $$
-\delta^{-}(S):={(i,j)\in A:\ i\notin S,\ j\in S}.
+\delta^{-}(S):={(i,j) \in A:\ i\notin S,\ j\in S}.
 $$
 
 Then:
 
 $$
-\sum_{(i,j)\in \delta^{-}(S)} x_{ij} ;;\ge;; \max{0,\ \kappa - |S\cap R|} \cdot  w_v
+\sum_{(i,j)\in \delta^{-}(S)} x_{ij} \ge \max{0,\ \kappa - |S\cap R|} \cdot  w_v
 \qquad \forall v\in V\setminus R,\ \forall S\subseteq V \text{ with } v\in S.
 $$
 
