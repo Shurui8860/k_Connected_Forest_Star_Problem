@@ -95,10 +95,9 @@ pip install numpy networkx matplotlib docplex
 
 ---
 
-## Optimization Model (High-Level)
+## Optimization Model 
 
-Let (x_{ij}\in{0,1}) indicate whether arc ((i,j)) is in the backbone,
-(y_{ij}\in{0,1}) whether customer (j) is assigned to backbone vertex (i), and
+Let $x_{ij}\in{0,1}$ indicate whether arc $(i,j)$ is in the backbone, $y_{ij}\in{0,1}$ whether customer (j) is assigned to backbone vertex (i), and
 (w_i\in{0,1}) whether vertex (i) lies on the backbone.
 
 * **Objective.**
@@ -129,9 +128,10 @@ Great—here is a precise list of the **decision variables, objective, and expli
 
 ## Objective
 
-[
+$$
 \min\ \sum_{(i,j)\in A} c_{ij}x_{ij};+;\sum_{i\in V}\sum_{j\in C} a_{ij}y_{ij}.
-]
+$$
+
 **Why:** We trade off construction cost of the backbone and assignment cost. Cheaper assignments push demand off the backbone; expensive assignments incentivize placing more customers on the backbone.
 
 ---
