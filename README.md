@@ -2,11 +2,11 @@
 
 **Formulation and Branch-and-Cut Implementation**
 
-This repository provides a reference implementation for the **$\kappa$-connected Arborescence–Star Problem** on directed graphs. It includes: 
-(i) data generation utilities, 
-(ii) a mixed-integer programming (MIP) model constructed in **DOCplex**, 
-(iii) **CPLEX** callback routines for branch-and-cut (lazy and user cuts), and 
-(iv) a **NetworkX/Matplotlib** visualizer for solutions.
+This repository provides a reference implementation for the **$\kappa$-connected Arborescence–Star Problem** on directed graphs. It includes: \\
+(i) data generation utilities, \\
+(ii) a mixed-integer programming (MIP) model constructed in **DOCplex**, \\
+(iii) **CPLEX** callback routines for branch-and-cut (lazy and user cuts), and \\ 
+(iv) a **NetworkX/Matplotlib** visualizer for solutions. 
 
 Intuitively, given a directed graph with a designated set of roots (R) and customer vertices (V), the goal is to select an arborescence-like backbone (a union of rooted directed trees) and to either place customers on the backbone or assign them to backbone vertices, while enforcing **κ-connectivity**: each backbone vertex must admit at least (κ) pairwise edge-disjoint directed paths from **distinct** roots. The model internalizes a cost trade-off between building backbone arcs and assigning customers.
 
