@@ -110,7 +110,7 @@ pip install numpy networkx matplotlib docplex
 ### Objective
 
 $$
-\min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
+\min \sum_{(i,j)} c_{ij},x_{ij} \+\ \sum_{(i,j)} a_{ij},y_{ij}.
 $$
 
 
