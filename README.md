@@ -97,13 +97,20 @@ pip install numpy networkx matplotlib docplex
 
 ## Optimization Model 
 
-Let $x_{ij}\in{0,1}$ indicate whether arc $(i,j)$ is in the backbone, $y_{ij}\in{0,1}$ whether customer (j) is assigned to backbone vertex (i), and
-(w_i\in{0,1}) whether vertex (i) lies on the backbone.
+## Decision variables
+
+* $x_{ij}\in{0,1}$ for $(i,j)\in A$: arc $(i,j)$ is selected in the backbone.
+* $y_{ij}\in{0,1}$ for $i\in V,\ j\in C$: customer (j) is assigned to (served by) backbone vertex (i).
+* $w_i\in{0,1}$ for $i\in V$: vertex (i) lies on the backbone (is “opened/kept” in the arborescence union).
+
+> Intuition: (x) builds the directed forest, (w) indicates which vertices actually belong to that forest, and (y) lets customers that are not on the forest be attached to some backbone vertex.
+
+
 
 * **Objective.**
-  [
+  $$
   \min \sum_{(i,j)} c_{ij},x_{ij} ;+; \sum_{(i,j)} a_{ij},y_{ij}.
-  ]
+  $$
 
 * **Structural constraints** (implemented in `model.py`):
 
@@ -118,13 +125,7 @@ This separation scheme follows the standard branch-and-cut paradigm: solve relax
 
 Great—here is a precise list of the **decision variables, objective, and explicit constraints**, each followed by an **intuitive explanation**. The notation matches a directed graph (G=(V,A)) with roots (R\subseteq V) and customers (C:=V\setminus R). Costs (c_{ij}\ge 0) (building a backbone arc) and (a_{ij}\ge 0) (assigning customer (j) to backbone vertex (i)) are given.
 
-## Decision variables
 
-* (x_{ij}\in{0,1}) for ((i,j)\in A): arc ((i,j)) is selected in the backbone.
-* (y_{ij}\in{0,1}) for (i\in V,\ j\in C): customer (j) is assigned to (served by) backbone vertex (i).
-* (w_i\in{0,1}) for (i\in V): vertex (i) lies on the backbone (is “opened/kept” in the arborescence union).
-
-> Intuition: (x) builds the directed forest, (w) indicates which vertices actually belong to that forest, and (y) lets customers that are not on the forest be attached to some backbone vertex.
 
 ## Objective
 
