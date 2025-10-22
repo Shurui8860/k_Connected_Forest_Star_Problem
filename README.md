@@ -50,10 +50,6 @@ Intuitively, given a directed graph with a designated set of roots $\mathcal{R}$
 conda create -n kfsp python=3.10 -y
 conda activate kfsp
 pip install numpy networkx matplotlib docplex
-# Install the CPLEX Python API from your local CPLEX distribution:
-#   <CPLEX_INSTALL_DIR>/python/3.x/<platform>/
-# then:
-# pip install cplex-*.whl
 ```
 
 ---
