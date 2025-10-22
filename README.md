@@ -122,10 +122,10 @@ $$
 w_r = 1 \qquad \forall r\in R.
 $$
 
-**(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ($w_v=0$, then it has no entering backbone arc) or *in* the backbone ($w_v=1$), in which case it must have **exactly one** entering arc—this is the arborescence rule that avoids branching into a node.
+**(C2) In–degree of non-roots:** A non-root vertex is either *outside* the backbone ($w_v=0$, then it has no entering backbone arc) or *in* the backbone ($w_v=1$), in which case it must have **exactly $\kappa$** entering arc—this is the arborescence rule that avoids branching into a node.
 
 $$
-\sum_{i \in V:\ (i,v)\in A} x_{iv} = w_v \qquad \forall v \in V \setminus R.
+\sum_{i \in V:\ (i,v)\in A} x_{iv} = \kappa w_v \qquad \forall v \in V \setminus R.
 $$
 
 **(C3) In–degree of roots**: Roots have no predecessors in an arborescence.
