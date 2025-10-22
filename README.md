@@ -154,9 +154,12 @@ $$
 
 **(A1) Each customer is either on the backbone or assigned exactly once:** A customer is served either by being a backbone vertex itself or by being attached to exactly one backbone vertex.
 
+$$
+w_j = y_{jj} \qquad \forall j\in C.
+$$
 
 $$
-w_j + \sum_{i\in V} y_{ij} = 1 \qquad \forall j\in C.
+\sum_{i\in V} y_{ij} = 1 \qquad \forall j\in C.
 $$
 
 **(A2) Assignment only to backbone vertices:** You can only assign a customer to a vertex that actually exists on the backbone.
