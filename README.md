@@ -137,7 +137,7 @@ $$
 **(C4) Outgoing arcs only from backbone vertices:** If a vertex is not on the backbone $w_v=0$, it cannot send backbone arcs; if it is on the backbone, any subset up to its out-degree is allowed. (Any equivalent big-(M) linking is acceptable; this one uses $\deg^{+}(v))$ as a tight (M).)
 
 $$
-\sum_{j\in V:\ (v,j)\in A} x_{vj} ;\le; \deg^{+}(v), w_v \qquad \forall v\in V.
+\sum_{j\in V:\ (v,j)\in A} x_{vj} = \kappa w_r \qquad \forall v\in V.
 $$
 
 **(C5) No 2-cycles:** Two opposite arcs between a pair would form a directed 2-cycle and violate the tree-like structure.
