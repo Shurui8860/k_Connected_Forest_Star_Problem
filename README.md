@@ -65,8 +65,8 @@ pip install numpy networkx matplotlib docplex
    p.create_data(const=const, seed=seed, width=100)
    ```
 
-   * `const=None` makes assignment costs proportional to arc costs (e.g., (a = k\cdot c));
-     otherwise (a = \texttt{const}\cdot c).
+   * `const=None` makes assignment costs proportional to arc costs (e.g., $a = k\cdot c$);
+     otherwise ($a = \texttt{const}\cdot c$).
 
 2. **Solve and visualize**
 
