@@ -1,5 +1,5 @@
-from data_class import *
-from model_class import *
+from data import *
+from model import *
 from callback import *
 import random
 
