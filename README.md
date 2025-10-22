@@ -82,8 +82,8 @@ pip install numpy networkx matplotlib docplex
 
 * **Graph construction.** `data.py` samples vertex coordinates and builds a directed graph (complete or sparsified, depending on the routine), together with:
 
-  * arc cost matrix (c_{ij}) (backbone construction cost),
-  * assignment cost matrix (a_{ij}) (assigning customer (j) to backbone vertex (i)).
+  * arc cost matrix $c_{ij}$ (backbone construction cost),
+  * assignment cost matrix $a_{ij}$ (assigning customer $j$ to backbone vertex $i$).
 
 * **Key parameters.**
 
