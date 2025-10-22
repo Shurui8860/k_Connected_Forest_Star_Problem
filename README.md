@@ -117,6 +117,7 @@ pip install numpy networkx matplotlib docplex
 ### Structural constraints
 
 **(C1) Root activation:** All roots must belong to the backbone; they are the supply/entry points for connectivity.
+
 $$
 w_r = 1 \qquad \forall r\in R.
 $$
